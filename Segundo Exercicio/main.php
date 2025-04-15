@@ -54,7 +54,7 @@ function settOptionPainel($option, $repo) {
                 echo "Nenhum carro cadastrado.\n";
             } else {
                 foreach ($carros as $carro) {
-                    echo($carro . "\n");
+                    echo($carro . "\n\n");
                 }
             }
             break;
@@ -71,24 +71,50 @@ function settOptionPainel($option, $repo) {
             break;
 
         case 4:
-            echo("ID do carro que deseja alterar: ");
-            $id = trim(fgets(STDIN));
-            $carroAntigo = $repo->findById($id);
-            if ($carroAntigo) {
-                echo("Nova marca: ");
-                $marca = trim(fgets(STDIN));
-                echo("Novo modelo: ");
-                $modelo = trim(fgets(STDIN));
-                echo("Nova cor: ");
-                $cor = trim(fgets(STDIN));
-                echo("Novo KM: ");
-                $km = trim(fgets(STDIN));
-                $novoCarro = new Carro($marca, $modelo, $cor, $km, $id);
-                $repo->updateData($novoCarro);
-            } else {
-                echo "Carro não encontrado.\n";
+        echo("ID do carro que deseja alterar: ");
+        $id = trim(fgets(STDIN));
+        $carro = $repo->findById($id);
+        if ($carro) {
+            echo "Qual campo deseja alterar?\n";
+            echo "1 - Marca\n";
+            echo "2 - Modelo\n";
+            echo "3 - Cor\n";
+            echo "4 - KM\n";
+            echo "Escolha uma opção: ";
+            $campo = trim(fgets(STDIN));
+
+            switch ($campo) {
+                case 1:
+                    echo "Nova marca: ";
+                    $novaMarca = trim(fgets(STDIN));
+                    $carro->setMarca($novaMarca);
+                    break;
+                case 2:
+                    echo "Novo modelo: ";
+                    $novoModelo = trim(fgets(STDIN));
+                    $carro->setModelo($novoModelo);
+                    break;
+                case 3:
+                    echo "Nova cor: ";
+                    $novaCor = trim(fgets(STDIN));
+                    $carro->setCor($novaCor);
+                    break;
+                case 4:
+                    echo "Novo KM: ";
+                    $novoKm = trim(fgets(STDIN));
+                    $carro->setKm($novoKm);
+                    break;
+                default:
+                    echo "Opção inválida.\n";
+                    return;
             }
-            break;
+
+            $repo->updateData($carro);
+        } else {
+            echo "Carro não encontrado.\n";
+        }
+        break;
+
 
         case 5:
             echo("ID do carro que deseja excluir: ");
